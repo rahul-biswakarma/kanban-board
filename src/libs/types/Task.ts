@@ -5,15 +5,15 @@ import { TodoTaskType } from "./TodoTask";
 export type TaskType = {
 	id: string;
 	title: string;
-	description: string;
+	description: string | null;
 	labels: LabelType[] | null;
 	currentColumn: number;
 	creationDate: Date;
-	dueDate: Date;
+	dueDate: Date | null;
 	subTasks: TodoTaskType[] | null;
 	author: string;
 	editors: string[] | null;
-	color: string;
+	color: string | null;
 };
 
 // KanbanTask Props Type

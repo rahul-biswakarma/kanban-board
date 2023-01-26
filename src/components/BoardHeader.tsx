@@ -1,22 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { BoardHeaderPropsType } from "../libs/types/BoardHeader";
 
 const BoardHeader: React.FC<BoardHeaderPropsType> = (props) => {
 	const { title, description, members, starred } = props;
 
-	const sectionClasses = "flex justify-between gap-[1rem]";
+	const [isHeaderHidden, setisHeaderHidden] = useState(true);
+
+	const sectionClasses =
+		"flex justify-between gap-[1rem] transition-all duration-100 ease-in-out";
 	const buttonsClasses =
-		"p-[1rem_3rem] text-center border-b-[3px] border-transparent hover:border-blue-500";
+		"p-[1rem_3rem] text-center border-b-[3px] border-transparent hover:border-blue-500 cursor-pointer transition-all duration-100 ease-in-out";
 	const iconsClasses =
-		"h-6 stroke-inherit hover:stroke-width-[2px] transition-all duration-100 ease-in-out stroke-nav_icon_color";
+		"h-6 stroke-inherit hover:stroke-width-[2px] transition-all duration-100 ease-in-out stroke-nav_icon_color transition-all duration-100 ease-in-out";
 
 	return (
-		<header className="w-full flex flex-col gap-[2rem] border-b-[2px] border-border_color">
-			<section className={`${sectionClasses} p-[2rem_3rem] pb-[0]`}>
+		<header className="w-full sticky top-0 left-[0px] flex flex-col gap-[1rem] border-b-[2px] border-border_color bg-white z-50">
+			<section
+				style={{ paddingBottom: !isHeaderHidden ? "0px" : "2rem" }}
+				className={`${sectionClasses} p-[2rem_3rem]`}
+			>
 				<div className="flex flex-col gap-[1rem] w-full">
 					<h1 className="text-4xl font-bold">{title}</h1>
-					<p className="text-text_2">{description}</p>
+					{!isHeaderHidden && <p className="text-text_2">{description}</p>}
 				</div>
 				<div className="flex flex-col items-end gap-[2rem] w-max">
 					<div className="flex gap-[1.5rem]">
@@ -54,6 +60,24 @@ const BoardHeader: React.FC<BoardHeaderPropsType> = (props) => {
 							viewBox="0 0 24 24"
 							strokeWidth={1.5}
 							className={iconsClasses}
+							onClick={() => setisHeaderHidden(!isHeaderHidden)}
+							style={{
+								transform: isHeaderHidden ? "rotate(0deg)" : "rotate(180deg)",
+							}}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M4.5 15.75l7.5-7.5 7.5 7.5"
+							/>
+						</svg>
+
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							strokeWidth={1.5}
+							className={iconsClasses}
 						>
 							<path
 								strokeLinecap="round"
@@ -64,35 +88,37 @@ const BoardHeader: React.FC<BoardHeaderPropsType> = (props) => {
 					</div>
 				</div>
 			</section>
-			<section className={`${sectionClasses} items-end pr-[3rem]`}>
-				<div className="flex gap-[1rem]">
-					<div className={buttonsClasses}>Board</div>
-					<div className={buttonsClasses}>Members</div>
-				</div>
-				<div className="flex justify-end py-[1rem]">
-					{members.map((member: string, index: number) => {
-						if (index < 5) {
-							return (
-								<img
-									key={`header-user-${index}`}
-									className="ml-[-1rem] w-[2.5rem] h-[2.5rem] rounded-full object-cover border-[5px] border-white"
-									src={member}
-									alt={`user-${index}`}
-								/>
-							);
-						} else if (index === 5) {
-							return (
-								<div
-									key={`header-user-${index}`}
-									className="ml-[-1rem] flex items-center justify-center w-[2.5rem] h-[2.5rem] rounded-full bg-amber-300 text-white font-bold border-[5px] border-white"
-								>
-									+{members.length - 5}
-								</div>
-							);
-						}
-					})}
-				</div>
-			</section>
+			{!isHeaderHidden && (
+				<section className={`${sectionClasses} items-end pr-[3rem]`}>
+					<div className="flex gap-[1rem]">
+						<div className={buttonsClasses}>Board</div>
+						<div className={buttonsClasses}>Members</div>
+					</div>
+					<div className="flex justify-end py-[1rem]">
+						{members.map((member: string, index: number) => {
+							if (index < 5) {
+								return (
+									<img
+										key={`header-user-${index}`}
+										className="ml-[-1rem] w-[2.5rem] h-[2.5rem] rounded-full object-cover border-[5px] border-white"
+										src={member}
+										alt={`user-${index}`}
+									/>
+								);
+							} else if (index === 5) {
+								return (
+									<div
+										key={`header-user-${index}`}
+										className="ml-[-1rem] flex items-center justify-center w-[2.5rem] h-[2.5rem] rounded-full bg-amber-300 text-white font-bold border-[5px] border-white"
+									>
+										+{members.length - 5}
+									</div>
+								);
+							}
+						})}
+					</div>
+				</section>
+			)}
 		</header>
 	);
 };

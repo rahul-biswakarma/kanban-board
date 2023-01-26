@@ -5,6 +5,7 @@ export type BoardColumnType = {
 	id: string;
 	title: string;
 	wipLimit: number;
+	color: string;
 	tasks: TaskType[] | null;
 };
 

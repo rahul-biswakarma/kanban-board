@@ -1,7 +1,20 @@
 import React from "react";
 
-const BoardBody = () => {
-	return <main className="bg-bg_2 w-full h-full"></main>;
+import BoardColumn from "./BoardColumn";
+
+import { BoardBodyPropsType } from "../libs/types/BoardBody";
+
+const BoardBody: React.FC<BoardBodyPropsType> = (props) => {
+	return (
+		<main className="relative bg-bg_2 w-full h-full flex gap-[2rem] px-[2rem]">
+			{props.columns.map((column) => (
+				<BoardColumn
+					key={column.id}
+					column={column}
+				/>
+			))}
+		</main>
+	);
 };
 
 export default BoardBody;

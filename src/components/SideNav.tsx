@@ -7,7 +7,7 @@ const Navbar: React.FC = () => {
 		"w-6 h-6 stroke-inherit hover:stroke-width-[2px] transition-all duration-100 ease-in-out";
 
 	return (
-		<nav className="h-full w-[100px] py-[2rem] flex flex-col items-center gap-[3rem] border-r-[2px] border-border_color">
+		<nav className="sticky top-[0px] left-[0px] h-[100vh] w-[100px] py-[2rem] flex flex-col items-center gap-[3rem] border-r-[2px] border-border_color">
 			<div className="flex justify-center align-center mb-[1rem">
 				<img
 					className="w-12 h-12 rounded-full"

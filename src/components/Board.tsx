@@ -7,14 +7,14 @@ import { BoardPropsType } from "../libs/types/Board";
 const Board: React.FC<BoardPropsType> = (props) => {
 	const { board } = props;
 	return (
-		<div className="w-full">
+		<div className="relative w-full">
 			<BoardHeader
 				title={board.title}
 				description={board.description}
 				starred={board.starred}
 				members={board.members}
 			/>
-			<BoardBody />
+			<BoardBody columns={board.columns} />
 		</div>
 	);
 };

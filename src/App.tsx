@@ -26,16 +26,110 @@ const App: React.FC = () => {
 		columns: [
 			{
 				id: "1",
-				title: "Column 1",
+				title: "Todo",
 				wipLimit: 5,
+				color: "#f00",
 				tasks: [
 					{
 						id: "1",
 						title: "Task 1",
 						description: "Task 1 Description",
 						author: "https://i.pravatar.cc/150?img=1",
-						editors: null,
+						editors: [
+							"https://i.pravatar.cc/150?img=2",
+							"https://i.pravatar.cc/150?img=3",
+							"https://i.pravatar.cc/150?img=4",
+						],
 						currentColumn: 1,
+						creationDate: new Date("2021-08-01"),
+						dueDate: new Date("2021-08-01"),
+						subTasks: [
+							{ id: "1", title: "Subtask 1", completed: false },
+							{ id: "2", title: "Subtask 2", completed: false },
+						],
+						color: "#ffe43d",
+						labels: [
+							{ name: "Label 1", color: "#dc9cf0" },
+							{ name: "Label 1", color: "#a6f09c" },
+							{ name: "Label 1", color: "#f0e19c" },
+						],
+					},
+					{
+						id: "1",
+						title: "Task 1",
+						description: "Task 1 Description",
+						author: "https://i.pravatar.cc/150?img=1",
+						editors: [
+							"https://i.pravatar.cc/150?img=2",
+							"https://i.pravatar.cc/150?img=3",
+							"https://i.pravatar.cc/150?img=4",
+						],
+						currentColumn: 1,
+						creationDate: new Date("2021-08-01"),
+						dueDate: new Date("2021-08-01"),
+						subTasks: [
+							{ id: "1", title: "Subtask 1", completed: false },
+							{ id: "1", title: "Subtask 2", completed: false },
+						],
+						color: "#ffe43d",
+						labels: [{ name: "Label 1", color: "#f00" }],
+					},
+					{
+						id: "1",
+						title: "Task 1",
+						description: "Task 1 Description",
+						author: "https://i.pravatar.cc/150?img=1",
+						editors: [
+							"https://i.pravatar.cc/150?img=2",
+							"https://i.pravatar.cc/150?img=3",
+							"https://i.pravatar.cc/150?img=4",
+						],
+						currentColumn: 1,
+						creationDate: new Date("2021-08-01"),
+						dueDate: new Date("2021-08-01"),
+						subTasks: [
+							{ id: "1", title: "Subtask 1", completed: false },
+							{ id: "1", title: "Subtask 2", completed: false },
+						],
+						color: "#ffe43d",
+						labels: [{ name: "Label 1", color: "#f00" }],
+					},
+					{
+						id: "1",
+						title: "Task 1",
+						description: "Task 1 Description",
+						author: "https://i.pravatar.cc/150?img=1",
+						editors: [
+							"https://i.pravatar.cc/150?img=2",
+							"https://i.pravatar.cc/150?img=3",
+							"https://i.pravatar.cc/150?img=4",
+							"https://i.pravatar.cc/150?img=4",
+						],
+						currentColumn: 1,
+						creationDate: new Date("2021-08-01"),
+						dueDate: new Date("2021-08-01"),
+						subTasks: [
+							{ id: "1", title: "Subtask 1", completed: false },
+							{ id: "1", title: "Subtask 2", completed: false },
+						],
+						color: "#ffe43d",
+						labels: [{ name: "Label 1", color: "#f00" }],
+					},
+				],
+			},
+			{
+				id: "2",
+				title: "In Progress",
+				wipLimit: 0,
+				color: "#0f0",
+				tasks: [
+					{
+						id: "1",
+						title: "Task 1",
+						description: null,
+						author: "https://i.pravatar.cc/150?img=1",
+						editors: null,
+						currentColumn: 2,
 						creationDate: new Date(),
 						dueDate: new Date(),
 						subTasks: null,
@@ -47,7 +141,7 @@ const App: React.FC = () => {
 		],
 	};
 	return (
-		<div className="w-full h-[100vh] overflow-hidden flex">
+		<div className="w-full min-h-[100vh] h-full flex">
 			<SideNav />
 			<Board board={board} />
 		</div>
