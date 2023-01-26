@@ -13,6 +13,8 @@ import {
 
 const App: React.FC = () => {
 	const [boardNo, setBoardNo] = useState<number>(0);
+	const [toggleBoardForm, setToggleBoardForm] = useState<boolean>(false);
+
 	let boards: BoardListsPropsType = [
 		{
 			id: "1",
@@ -151,7 +153,9 @@ const App: React.FC = () => {
 		<div className="w-full min-h-[100vh] h-full flex">
 			<SideNav
 				boards={boards}
+				toggleBoardForm={toggleBoardForm}
 				setBoardNo={setBoardNo}
+				setToggleBoardForm={setToggleBoardForm}
 			/>
 			<Board board={boards[boardNo]} />
 		</div>

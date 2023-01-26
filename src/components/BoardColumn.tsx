@@ -10,7 +10,7 @@ const KanbanColumn: React.FC<BoardColumnPropsType> = (props) => {
 		"h-6 stroke-inherit hover:stroke-width-[2px] transition-all duration-100 ease-in-out stroke-nav_icon_color";
 
 	return (
-		<section className="relative w-full h-full flex-[1_1_max(300px_1fr)] max-w-[350px] flex flex-col gap-[0.5rem]">
+		<section className="relative w-full flex-[1_1_max(300px_1fr)] max-w-[350px] flex flex-col gap-[0.5rem]">
 			<div className="sticky top-[100px] bg-bg_2 pt-[2rem]">
 				<header className="flex justify-between items-center">
 					<h2 className="flex gap-[10px] items-center">

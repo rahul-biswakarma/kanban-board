@@ -98,7 +98,9 @@ const Navbar: React.FC<SideNavProps> = (props) => {
 			{toggleBoardList && (
 				<BoardLists
 					boards={props.boards}
+					toggleBoardForm={props.toggleBoardForm}
 					setBoardNo={props.setBoardNo}
+					setToggleBoardForm={props.setToggleBoardForm}
 				/>
 			)}
 		</nav>
