@@ -1,4 +1,5 @@
 import React from "react";
+import { Droppable } from "react-beautiful-dnd";
 
 import KanbanTask from "./Task";
 import { BoardColumnPropsType } from "../libs/types/BoardColumn";
@@ -45,16 +46,25 @@ const KanbanColumn: React.FC<BoardColumnPropsType> = (props) => {
 					</svg>
 				</div>
 			</div>
-			<div className="flex flex-col gap-[0.5rem]">
-				{column.tasks
-					? column.tasks.map((task) => (
-							<KanbanTask
-								key={task.id}
-								task={task}
-							/>
-					  ))
-					: null}
-			</div>
+			<Droppable droppableId={column.id}>
+				{(provided) => (
+					<div
+						className="flex flex-col gap-[0.5rem]"
+						{...provided.droppableProps}
+						ref={provided.innerRef}
+					>
+						{column.tasks
+							? column.tasks.map((task, index) => (
+									<KanbanTask
+										key={task.id}
+										index={index}
+										task={task}
+									/>
+							  ))
+							: null}
+					</div>
+				)}
+			</Droppable>
 		</section>
 	);
 };

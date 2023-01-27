@@ -28,6 +28,7 @@ const BoardLists: React.FC<BoardListPropsType> = (props) => {
 				{boards.map((board, index) => {
 					return (
 						<div
+							key={`board-${board.id}`}
 							onClick={() => setBoardNo(index)}
 							className="flex justify-between rounded-md p-[0.3rem] stroke-text_2 text-text_2 hover:text-text_1 hover:stroke-text_1 cursor-pointer"
 						>

@@ -13,7 +13,7 @@ const Navbar: React.FC<SideNavProps> = (props) => {
 		"w-6 h-6 stroke-inherit hover:stroke-width-[2px] transition-all duration-100 ease-in-out";
 
 	return (
-		<nav className="sticky top-[0px] left-[0px] h-[100vh]  flex border-r-[2px] border-border_color">
+		<nav className="sticky bg-white top-[0px] left-[0px] h-[100vh]  flex border-r-[2px] border-border_color">
 			<div className="flex flex-col items-center w-[100px] py-[2rem] gap-[3rem]">
 				<div className="flex justify-center align-center mb-[1rem">
 					<img

@@ -19,4 +19,5 @@ export type TaskType = {
 // KanbanTask Props Type
 export type TaskPropsType = {
 	task: TaskType;
+	index: number;
 };

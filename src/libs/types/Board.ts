@@ -15,4 +15,4 @@ export type BoardPropsType = {
 	board: BoardType;
 };
 
-export type BoardListsPropsType = BoardType[];
+export type BoardListsType = BoardType[];
