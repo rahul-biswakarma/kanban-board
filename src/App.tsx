@@ -20,8 +20,10 @@ const App: React.FC = () => {
 	const [boardNo, setBoardNo] = useState<number>(0);
 	const [boards, setBoards] = useState<BoardListsType>([]);
 	const [userKey, setUserKey] = useState<string | null>("");
+	const [memberImages, setMemberImages] = useState<any>([]);
 	const [notifications, setNotifications] = useState<any>([]);
 	const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
+	const [currentColumnNo, setCurrentColumnNo] = useState<number>(0);
 	const [toggleBoardForm, setToggleBoardForm] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -50,7 +52,6 @@ const App: React.FC = () => {
 						const promises = boardsId.map((boardId: string) =>
 							database.ref(`boards/${boardId}`).once("value")
 						);
-
 						Promise.all(promises).then((snapshots) => {
 							snapshots.forEach((snapshot) => {
 								if (snapshot.exists()) {
@@ -65,9 +66,51 @@ const App: React.FC = () => {
 		}
 	}, [userKey]);
 
+	useEffect(() => {
+		if (boards.length > 0) {
+			boards[boardNo].members.forEach((member: string) => {
+				const usersRef = database.ref("users");
+				const userRef = usersRef.orderByChild("email").equalTo(member);
+				userRef.on("value", (snapshot) => {
+					if (snapshot.exists()) {
+						const userKey = Object.keys(snapshot.val())[0];
+						let imageUrl = snapshot.val()[userKey].photoURL;
+						if (!imageUrl) {
+							setMemberImages([
+								...memberImages,
+								{
+									email: member,
+									photoURL:
+										"https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg",
+								},
+							]);
+						} else {
+							setMemberImages([
+								...memberImages,
+								{ email: member, photoURL: imageUrl },
+							]);
+						}
+					}
+				});
+			});
+		}
+	}, [boards]);
+
 	return (
 		<>
-			<UserContext.Provider value={{ user, setUser, userKey, notifications }}>
+			<UserContext.Provider
+				value={{
+					boards,
+					boardNo,
+					user,
+					setUser,
+					userKey,
+					notifications,
+					memberImages,
+					currentColumnNo,
+					setCurrentColumnNo
+				}}
+			>
 				{userSignedIn ? (
 					<div className="w-full min-h-[100vh] h-full flex bg-bg_2">
 						<SideNav

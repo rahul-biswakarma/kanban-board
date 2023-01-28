@@ -8,7 +8,7 @@ import { BoardHeaderPropsType } from "../libs/types/BoardHeader";
 const BoardHeader: React.FC<BoardHeaderPropsType> = (props) => {
 	const { title, description, members, starred } = props;
 
-	const { userKey } = useContext(UserContext);
+	const { userKey, memberImages } = useContext(UserContext);
 
 	const [isHeaderHidden, setisHeaderHidden] = useState(true);
 	const [isNotificationHidden, setIsNotificationHidden] = useState(true);
@@ -102,15 +102,15 @@ const BoardHeader: React.FC<BoardHeaderPropsType> = (props) => {
 						<div className={`${buttonsClasses} border-blue-500`}>Board</div>
 						<div className={buttonsClasses}>Members</div>
 					</div>
-					<div className="flex justify-end py-[1rem]">
-						{members.map((member: string, index: number) => {
+					<div className="flex justify-end py-[1rem] min-w-[2.5rem]">
+						{memberImages.map((member: any, index: number) => {
 							if (index < 5) {
 								return (
 									<img
 										key={`header-user-${index}`}
 										className="ml-[-1rem] w-[2.5rem] h-[2.5rem] rounded-full object-cover border-[5px] border-white"
-										src={member}
-										alt={`user-${index}`}
+										src={member.photoURL}
+										alt={`${member.email}-${index}`}
 									/>
 								);
 							} else if (index === 5) {
