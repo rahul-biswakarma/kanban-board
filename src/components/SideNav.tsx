@@ -20,6 +20,7 @@ const Navbar: React.FC<SideNavProps> = (props) => {
 						className="w-12 h-12 rounded-full"
 						src={`${props.user.photoURL}`}
 						alt="user-avatar"
+						referrer-policy="no-referrer"
 					/>
 				</div>
 				<div className="flex flex-col items-center justify-between w-full h-full">

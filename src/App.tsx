@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { auth } from "./libs/firebase";
+import React, { useState, useEffect } from "react";
 import firebase from "firebase/compat/app";
 
+// Context
 import { UserContext } from "./libs/context";
+
+import { database } from "./libs/firebase";
 
 // Components
 import Board from "./components/Board";
@@ -17,6 +19,7 @@ const App: React.FC = () => {
 	const [user, setUser] = useState<any>(null);
 	const [boardNo, setBoardNo] = useState<number>(0);
 	const [boards, setBoards] = useState<BoardListsType>([]);
+	const [userKey, setUserKey] = useState<string | null>("");
 	const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
 	const [toggleBoardForm, setToggleBoardForm] = useState<boolean>(false);
 
@@ -25,6 +28,41 @@ const App: React.FC = () => {
 			setUserSignedIn(true);
 		}
 	}, []);
+
+	useEffect(() => {
+		if (userKey !== "") {
+			let currentUserRef = database.ref(`users/${userKey}`);
+			console.log("currentUserRef: ", userKey);
+
+			let boardsId: any = [];
+			currentUserRef
+				.once("value")
+				.then(function (snapshot) {
+					if (snapshot.exists()) {
+						let userData = snapshot.val();
+						boardsId = userData.boards;
+					}
+				})
+				.then(() => {
+					let boards: any = [];
+					if (boardsId) {
+						const promises = boardsId.map((boardId: string) =>
+							database.ref(`boards/${boardId}`).once("value")
+						);
+
+						Promise.all(promises).then((snapshots) => {
+							snapshots.forEach((snapshot) => {
+								if (snapshot.exists()) {
+									let board = snapshot.val();
+									boards.push(board);
+								}
+							});
+							setBoards(boards);
+						});
+					}
+				});
+		}
+	}, [userKey]);
 
 	return (
 		<>
@@ -49,7 +87,10 @@ const App: React.FC = () => {
 					</div>
 				) : (
 					<Signup
+						userKey={userKey}
+						setUserKey={setUserKey}
 						setUser={setUser}
+						setBoards={setBoards}
 						setUserSignedIn={setUserSignedIn}
 					/>
 				)}

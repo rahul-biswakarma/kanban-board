@@ -174,7 +174,84 @@ const BoardForm: React.FC<BoardFormPropsType> = (props) => {
 
 		setBoards([...boards, boardForm]);
 		setToggleBoardForm(false);
-		database.ref("boards").push(localBoardForm);
+
+		let newBoardKey: string | null;
+		const newBoardRef = database.ref("boards").push();
+		newBoardRef.set(localBoardForm, (error) => {
+			if (error) {
+				console.log("Error on Create Board Form: ", error);
+			} else {
+				newBoardKey = newBoardRef.key;
+			}
+		});
+
+		memberInputs.map((member) => {
+			const usersRef = database.ref(`users`);
+			let userRef = usersRef.orderByChild("email").equalTo(member);
+
+			userRef.once("value").then(function (snapshot) {
+				if (snapshot.exists()) {
+					snapshot.forEach(function (childSnapshot) {
+						let key = childSnapshot.key;
+						let currentUser = database.ref(`users/${key}`);
+						currentUser.once("value").then((snapshot) => {
+							if (snapshot.val().email === user.email) {
+								let snapshotNotifications = [];
+								if (snapshot.val().notifications)
+									snapshotNotifications = snapshot.val().notifications;
+
+								let snapshotBoards = [];
+								if (snapshot.val().boards)
+									snapshotBoards = snapshot.val().boards;
+
+								currentUser.update({
+									notifications: [
+										...snapshotNotifications,
+										{
+											message: `You have created ${boardForm.title}`,
+											seen: false,
+										},
+									],
+									boards: [...snapshotBoards, `${newBoardKey}`],
+								});
+							} else {
+								let snapshotNotifications = [];
+								if (snapshot.val().notifications)
+									snapshotNotifications = snapshot.val().notifications;
+
+								let snapshotBoards = [];
+								if (snapshot.val().boards)
+									snapshotBoards = snapshot.val().boards;
+
+								currentUser.update({
+									notifications: [
+										...snapshotNotifications,
+										{
+											message: `You have been added to ${boardForm.title}`,
+											seen: false,
+										},
+									],
+									boards: [...snapshotBoards, `${newBoardKey}`],
+								});
+							}
+						});
+					});
+				} else {
+					usersRef.push({
+						email: member,
+						photoURL: "",
+						displayName: "",
+						notifications: [
+							{
+								message: `You have been added to ${boardForm.title}`,
+								seen: false,
+							},
+						],
+						boards: [`${newBoardKey}`],
+					});
+				}
+			});
+		});
 	}
 
 	function addMemberInputs() {
