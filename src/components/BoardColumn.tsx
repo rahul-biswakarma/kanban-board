@@ -11,7 +11,10 @@ const KanbanColumn: React.FC<BoardColumnPropsType> = (props) => {
 		"h-6 stroke-inherit hover:stroke-width-[2px] transition-all duration-100 ease-in-out stroke-nav_icon_color";
 
 	return (
-		<section className="relative w-full flex-[1_1_max(300px_1fr)] max-w-[350px] flex flex-col gap-[0.5rem]">
+		<section
+			id={column.id}
+			className="relative w-full flex-[1_1_max(300px_1fr)] max-w-[350px] flex flex-col gap-[0.5rem]"
+		>
 			<div className="sticky top-[100px] bg-bg_2 pt-[2rem]">
 				<header className="flex justify-between items-center">
 					<h2 className="flex gap-[10px] items-center">
@@ -30,7 +33,13 @@ const KanbanColumn: React.FC<BoardColumnPropsType> = (props) => {
 						</span>
 					)}
 				</header>
-				<div className="flex justify-center items-center w-full py-[0.5rem] bg-white rounded-md shadow-sm border-[1px] border-border_color shadow-slate-200">
+				{/* Add Task */}
+				<div
+					className="flex justify-center items-center w-full py-[0.5rem] bg-white rounded-md shadow-sm border-[1px] border-border_color shadow-slate-200 cursor-pointer"
+					onClick={() => {
+						// addTask(column.id);
+					}}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"

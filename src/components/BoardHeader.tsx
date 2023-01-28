@@ -91,7 +91,7 @@ const BoardHeader: React.FC<BoardHeaderPropsType> = (props) => {
 			{!isHeaderHidden && (
 				<section className={`${sectionClasses} items-end pr-[3rem]`}>
 					<div className="flex gap-[1rem]">
-						<div className={buttonsClasses}>Board</div>
+						<div className={`${buttonsClasses} border-blue-500`}>Board</div>
 						<div className={buttonsClasses}>Members</div>
 					</div>
 					<div className="flex justify-end py-[1rem]">

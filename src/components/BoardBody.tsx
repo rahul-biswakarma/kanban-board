@@ -7,16 +7,18 @@ import { BoardBodyPropsType } from "../libs/types/BoardBody";
 
 const BoardBody: React.FC<BoardBodyPropsType> = (props) => {
 	return (
-		<main className="relative bg-bg_2 w-full flex gap-[2rem] px-[2rem]">
-			<DragDropContext onDragEnd={() => {}}>
-				{props.columns.map((column) => (
-					<BoardColumn
-						key={column.id}
-						column={column}
-					/>
-				))}
-			</DragDropContext>
-		</main>
+		<DragDropContext onDragEnd={() => {}}>
+			<main className="relative bg-bg_2 w-full flex gap-[2rem] px-[2rem]">
+				{props.columns.map((column) => {
+					return (
+						<BoardColumn
+							key={column.id}
+							column={column}
+						/>
+					);
+				})}
+			</main>
+		</DragDropContext>
 	);
 };
 

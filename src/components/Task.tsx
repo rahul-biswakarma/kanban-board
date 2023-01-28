@@ -11,7 +11,6 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 	const { task, index } = props;
 	return (
 		<Draggable
-			key={task.id}
 			draggableId={task.id}
 			index={index}
 		>

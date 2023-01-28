@@ -1,12 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { BoardType } from "../libs/types/Board";
+
+import { database } from "../libs/firebase";
+import { UserContext } from "../libs/context";
 
 import { BoardColumnType } from "../libs/types/BoardColumn";
 import { BoardFormPropsType } from "../libs/types/BoardForms";
 
 const BoardForm: React.FC<BoardFormPropsType> = (props) => {
 	const { boards, setBoards, setToggleBoardForm } = props;
+
+	const { user, setUser } = useContext(UserContext);
 
 	// States
 	const [boardForm, setBoardForm] = useState<BoardType>({
@@ -85,7 +90,6 @@ const BoardForm: React.FC<BoardFormPropsType> = (props) => {
 		let emptyValue = false;
 
 		columnsContainer.forEach((column) => {
-			console.log(column);
 			let title = (
 				column.querySelector("input[type='text']") as HTMLInputElement
 			)?.value;
@@ -158,8 +162,19 @@ const BoardForm: React.FC<BoardFormPropsType> = (props) => {
 	let memberIndex = 0;
 	function handleBoardForm3(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
+
+		let memberInputs = members;
+		memberInputs.push(user.email);
+		setMembers(memberInputs);
+
+		let localBoardForm = boardForm;
+		localBoardForm.members = members;
+
+		setBoardForm(localBoardForm);
+
 		setBoards([...boards, boardForm]);
 		setToggleBoardForm(false);
+		database.ref("boards").push(localBoardForm);
 	}
 
 	function addMemberInputs() {
@@ -167,9 +182,12 @@ const BoardForm: React.FC<BoardFormPropsType> = (props) => {
 			.value;
 		if (
 			email !== "" &&
+			email !== user.email &&
 			/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
 		) {
-			setMembers([...members, email]);
+			let memberInputs = members;
+			memberInputs.push(email);
+			setMembers(memberInputs);
 			(document.getElementById("member-email") as HTMLInputElement).value = "";
 		} else {
 			if (MemberInputLabelRef.current)
@@ -180,7 +198,7 @@ const BoardForm: React.FC<BoardFormPropsType> = (props) => {
 	function deleteMemberInput(index: number) {
 		let memberInputs = [...members];
 		memberInputs.splice(index, 1);
-		setMembers([...memberInputs]);
+		setMembers(memberInputs);
 	}
 
 	return (

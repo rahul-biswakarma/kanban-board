@@ -18,7 +18,7 @@ const Navbar: React.FC<SideNavProps> = (props) => {
 				<div className="flex justify-center align-center mb-[1rem">
 					<img
 						className="w-12 h-12 rounded-full"
-						src="https://i.pravatar.cc/300"
+						src={`${props.user.photoURL}`}
 						alt="user-avatar"
 					/>
 				</div>
