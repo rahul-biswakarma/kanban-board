@@ -77,7 +77,18 @@ const App: React.FC = () => {
 							setBoardNo={setBoardNo}
 							setToggleBoardForm={setToggleBoardForm}
 						/>
-						{boards.length > 0 && <Board board={boards[boardNo]} />}
+						{boards.length > 0 ? (
+							<Board board={boards[boardNo]} />
+						) : (
+							<div className="flex justify-center items-center w-full h-[90vh]">
+								<div className="lds-ring">
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+								</div>
+							</div>
+						)}
 						{toggleBoardForm && (
 							<BoardForm
 								boards={boards}
