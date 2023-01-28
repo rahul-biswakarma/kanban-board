@@ -20,6 +20,7 @@ const App: React.FC = () => {
 	const [boardNo, setBoardNo] = useState<number>(0);
 	const [boards, setBoards] = useState<BoardListsType>([]);
 	const [userKey, setUserKey] = useState<string | null>("");
+	const [notifications, setNotifications] = useState<any>([]);
 	const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
 	const [toggleBoardForm, setToggleBoardForm] = useState<boolean>(false);
 
@@ -32,7 +33,6 @@ const App: React.FC = () => {
 	useEffect(() => {
 		if (userKey !== "") {
 			let currentUserRef = database.ref(`users/${userKey}`);
-			console.log("currentUserRef: ", userKey);
 
 			let boardsId: any = [];
 			currentUserRef
@@ -41,6 +41,7 @@ const App: React.FC = () => {
 					if (snapshot.exists()) {
 						let userData = snapshot.val();
 						boardsId = userData.boards;
+						setNotifications(userData.notifications);
 					}
 				})
 				.then(() => {
@@ -66,7 +67,7 @@ const App: React.FC = () => {
 
 	return (
 		<>
-			<UserContext.Provider value={{ user, setUser }}>
+			<UserContext.Provider value={{ user, setUser, userKey, notifications }}>
 				{userSignedIn ? (
 					<div className="w-full min-h-[100vh] h-full flex bg-bg_2">
 						<SideNav

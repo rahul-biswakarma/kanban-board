@@ -26,7 +26,6 @@ const Signup: React.FC<SignupPropsType> = (props) => {
 						photoURL: user.photoURL,
 						displayName: user.displayName,
 					});
-					console.log(snapshot.val());
 				} else {
 					const newUserRef = usersRef.push();
 					newUserRef.set(
