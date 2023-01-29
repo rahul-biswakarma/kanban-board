@@ -38,18 +38,16 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 					<p className="text-text_2">{task.description}</p>
 					{/* SubTasks */}
 					<div className="my-[0.5rem] mt-[1rem]">
-						{task.subTasks && task.subTasks.length > 0 ? (
-							<SubTask todos={task.subTasks} />
+						{task.checklist && task.checklist.length > 0 ? (
+							<SubTask todos={task.checklist} />
 						) : (
-							<div className="flex text-text_2 text-sm items-center py-[0.5rem]">
-								+ Subtasks
-							</div>
+							<div></div>
 						)}
 					</div>
 					<hr className="border-t-[2px] border-border_color my-[0.5rem]" />
-					<div className="flex justify-between flex-wrap pl-[1rem]">
+					<div className="flex justify-between flex-wrap">
 						<div className="w-max flex">
-							<img
+							{/* <img
 								key={`author-${task.author}`}
 								className="ml-[-1rem] w-[2.5rem] h-[2.5rem] rounded-full object-cover border-[5px] border-white"
 								src={task.author}
@@ -75,7 +73,8 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 										</div>
 									);
 								}
-							})}
+							})} */}
+							Due Date
 						</div>
 						<div className="flex justify-end items-center gap-[10px]">
 							<svg

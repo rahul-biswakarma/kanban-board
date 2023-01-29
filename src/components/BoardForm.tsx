@@ -262,9 +262,7 @@ const BoardForm: React.FC<BoardFormPropsType> = (props) => {
 			email !== user.email &&
 			/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
 		) {
-			let memberInputs = members;
-			memberInputs.push(email);
-			setMembers(memberInputs);
+			setMembers([...members, email]);
 			(document.getElementById("member-email") as HTMLInputElement).value = "";
 		} else {
 			if (MemberInputLabelRef.current)
@@ -463,7 +461,7 @@ const BoardForm: React.FC<BoardFormPropsType> = (props) => {
 							</div>
 						</div>
 					</div>
-					<div className="py-[1rem] flex flex-col gap-[0.5rem]">
+					<div className="py-[1rem] flex flex-col gap-[0.5rem] w-full">
 						{members.map((member, index) => (
 							<div
 								key={`member-email-${index}`}

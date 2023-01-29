@@ -12,7 +12,14 @@ const SubTask: React.FC<TodoTaskPropsType> = (props) => {
 							key={`subtask-${todo.id}`}
 							className="flex items-center gap-[0.5rem]"
 						>
-							<input type="checkbox" />
+							{todo.checked ? (
+								<input
+									type="checkbox"
+									checked
+								/>
+							) : (
+								<input type="checkbox" />
+							)}
 							<p className="text-sm text-text_2">{todo.title}</p>
 						</div>
 					);

@@ -2,7 +2,7 @@
 export type TodoTaskType = {
 	id: string;
 	title: string;
-	completed: boolean;
+	checked: boolean;
 };
 
 // TodoTask Props Type

@@ -10,7 +10,7 @@ export type TaskType = {
 	currentColumn: number;
 	creationDate: Date;
 	dueDate: Date | null;
-	subTasks: TodoTaskType[] | null;
+	checklist: TodoTaskType[] | null;
 	author: string;
 	editors: string[] | null;
 	color: string | null;
