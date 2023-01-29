@@ -68,33 +68,21 @@ const App: React.FC = () => {
 	}, [userKey]);
 
 	useEffect(() => {
+		console.log("hello");
 		if (boards.length > 0) {
-			// boards[boardNo].members.forEach((member: string) => {
-			// 	const usersRef = database.ref("users");
-			// 	const userRef = usersRef.orderByChild("email").equalTo(member);
-			// 	userRef.on("value", (snapshot) => {
-			// 		if (snapshot.exists()) {
-			// 			const userKey = Object.keys(snapshot.val())[0];
-			// 			let imageUrl = snapshot.val()[userKey].photoURL;
-			// 			if (!imageUrl) {
-			// 				setMemberImages([
-			// 					...memberImages,
-			// 					{
-			// 						email: member,
-			// 						photoURL:
-			// 							"https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg",
-			// 					},
-			// 				]);
-			// 			} else {
-			// 				setMemberImages([
-			// 					...memberImages,
-			// 					{ email: member, photoURL: imageUrl },
-			// 				]);
-			// 			}
-			// 		}
-			// 	});
-			// });
-			database.ref("boards")
+			var boardRef = database
+				.ref("boards")
+				.orderByChild("id")
+				.equalTo(boards[boardNo].id);
+
+			boardRef.once("value").then((snapshot) => {
+				if (snapshot.exists()) {
+					const boardKey = Object.keys(snapshot.val())[0];
+					console.log(boardKey);
+					let currentBoard = database.ref(`boards/${boardKey}`);
+					currentBoard.update(boards[boardNo]);
+				}
+			});
 		}
 	}, [boards]);
 
