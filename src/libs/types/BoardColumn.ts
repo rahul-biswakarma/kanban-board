@@ -12,4 +12,5 @@ export type BoardColumnType = {
 // BoardColumn Props Type
 export type BoardColumnPropsType = {
 	column: BoardColumnType;
+	columnNo: number;
 };

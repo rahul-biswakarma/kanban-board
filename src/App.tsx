@@ -24,6 +24,7 @@ const App: React.FC = () => {
 	const [notifications, setNotifications] = useState<any>([]);
 	const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
 	const [currentColumnNo, setCurrentColumnNo] = useState<number>(0);
+	const [toggleTaskForm, setToggleTaskForm] = useState<boolean>(false);
 	const [toggleBoardForm, setToggleBoardForm] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -68,31 +69,32 @@ const App: React.FC = () => {
 
 	useEffect(() => {
 		if (boards.length > 0) {
-			boards[boardNo].members.forEach((member: string) => {
-				const usersRef = database.ref("users");
-				const userRef = usersRef.orderByChild("email").equalTo(member);
-				userRef.on("value", (snapshot) => {
-					if (snapshot.exists()) {
-						const userKey = Object.keys(snapshot.val())[0];
-						let imageUrl = snapshot.val()[userKey].photoURL;
-						if (!imageUrl) {
-							setMemberImages([
-								...memberImages,
-								{
-									email: member,
-									photoURL:
-										"https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg",
-								},
-							]);
-						} else {
-							setMemberImages([
-								...memberImages,
-								{ email: member, photoURL: imageUrl },
-							]);
-						}
-					}
-				});
-			});
+			// boards[boardNo].members.forEach((member: string) => {
+			// 	const usersRef = database.ref("users");
+			// 	const userRef = usersRef.orderByChild("email").equalTo(member);
+			// 	userRef.on("value", (snapshot) => {
+			// 		if (snapshot.exists()) {
+			// 			const userKey = Object.keys(snapshot.val())[0];
+			// 			let imageUrl = snapshot.val()[userKey].photoURL;
+			// 			if (!imageUrl) {
+			// 				setMemberImages([
+			// 					...memberImages,
+			// 					{
+			// 						email: member,
+			// 						photoURL:
+			// 							"https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg",
+			// 					},
+			// 				]);
+			// 			} else {
+			// 				setMemberImages([
+			// 					...memberImages,
+			// 					{ email: member, photoURL: imageUrl },
+			// 				]);
+			// 			}
+			// 		}
+			// 	});
+			// });
+			database.ref("boards")
 		}
 	}, [boards]);
 
@@ -101,6 +103,7 @@ const App: React.FC = () => {
 			<UserContext.Provider
 				value={{
 					boards,
+					setBoards,
 					boardNo,
 					user,
 					setUser,
@@ -108,7 +111,9 @@ const App: React.FC = () => {
 					notifications,
 					memberImages,
 					currentColumnNo,
-					setCurrentColumnNo
+					toggleTaskForm,
+					setToggleTaskForm,
+					setCurrentColumnNo,
 				}}
 			>
 				{userSignedIn ? (

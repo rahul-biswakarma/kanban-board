@@ -9,11 +9,12 @@ const BoardBody: React.FC<BoardBodyPropsType> = (props) => {
 	return (
 		<DragDropContext onDragEnd={() => {}}>
 			<main className="relative bg-bg_2 w-full flex gap-[2rem] px-[2rem]">
-				{props.columns.map((column) => {
+				{props.columns.map((column, index) => {
 					return (
 						<BoardColumn
-							key={column.id}
+							key={`column-${column.id}`}
 							column={column}
+							columnNo={index}
 						/>
 					);
 				})}

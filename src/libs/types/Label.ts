@@ -1,7 +1,7 @@
 // Label Type
 export type LabelType = {
-	name: string;
-	color: string;
+	id: string;
+	title: string;
 };
 
 export type LabelPropsType = {

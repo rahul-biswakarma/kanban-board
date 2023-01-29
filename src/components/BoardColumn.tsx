@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Droppable } from "react-beautiful-dnd";
+
+import { UserContext } from "../libs/context";
 
 import KanbanTask from "./Task";
 import { BoardColumnPropsType } from "../libs/types/BoardColumn";
 
 const KanbanColumn: React.FC<BoardColumnPropsType> = (props) => {
-	const { column } = props;
+	const { column, columnNo } = props;
+	const { setCurrentColumnNo, setToggleTaskForm } = useContext(UserContext);
 
 	const iconsClasses =
 		"h-6 stroke-inherit hover:stroke-width-[2px] transition-all duration-100 ease-in-out stroke-nav_icon_color";
@@ -37,7 +40,8 @@ const KanbanColumn: React.FC<BoardColumnPropsType> = (props) => {
 				<div
 					className="flex justify-center items-center w-full py-[0.5rem] bg-white rounded-md shadow-sm border-[1px] border-border_color shadow-slate-200 cursor-pointer"
 					onClick={() => {
-						// addTask(column.id);
+						setCurrentColumnNo(columnNo);
+						setToggleTaskForm(true);
 					}}
 				>
 					<svg
@@ -58,6 +62,8 @@ const KanbanColumn: React.FC<BoardColumnPropsType> = (props) => {
 			<Droppable droppableId={column.id}>
 				{(provided) => (
 					<div
+						key={column.id}
+						id={column.id}
 						className="flex flex-col gap-[0.5rem]"
 						{...provided.droppableProps}
 						ref={provided.innerRef}

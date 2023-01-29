@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
+
+import { UserContext } from "../libs/context";
 
 import TaskForm from "./TaskForm";
-
 import BoardBody from "./BoardBody";
 import BoardHeader from "./BoardHeader";
+
 import { BoardPropsType } from "../libs/types/Board";
 
 const Board: React.FC<BoardPropsType> = (props) => {
 	const { board } = props;
+	const { toggleTaskForm } = useContext(UserContext);
 	return (
 		<div className="relative w-full">
 			<BoardHeader
@@ -17,7 +20,9 @@ const Board: React.FC<BoardPropsType> = (props) => {
 				members={board.members}
 			/>
 			<BoardBody columns={board.columns} />
-			<TaskForm />
+			<div className={`${toggleTaskForm ? "flex" : "hidden"}`}>
+				<TaskForm />
+			</div>
 		</div>
 	);
 };

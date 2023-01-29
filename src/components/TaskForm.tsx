@@ -1,10 +1,14 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { useContext, useState, useRef, useEffect } from "react";
 
+import { database } from "../libs/firebase";
+
 import { UserContext } from "../libs/context";
+import { AddTaskToBoard } from "../libs/AddTaskToBoard";
 
 const TaskForm = () => {
-	const { boards, boardNo, currentColumnNo } = useContext(UserContext);
+	const { boards, setBoards, boardNo, currentColumnNo, setToggleTaskForm } =
+		useContext(UserContext);
 
 	// State
 	const [checkList, setCheckList] = useState<any>([]);
@@ -80,12 +84,23 @@ const TaskForm = () => {
 		inputs.forEach((input: any) => {
 			checkedValues.push(input.value);
 		});
-		console.log(checkedValues);
 		return checkedValues;
 	};
 
 	const handleTaskSubmit = (e: any) => {
 		e.preventDefault();
+		let tempLabelArray =
+			LABEL_INPUT_REF.current &&
+			LABEL_INPUT_REF.current.value.trim().split(" ");
+		let finalLabelArray: any = [];
+		tempLabelArray?.map((label: string) => {
+			let labelObj = {
+				id: uuidv4(),
+				title: label,
+			};
+			finalLabelArray.push(labelObj);
+		});
+
 		let task = {
 			id: uuidv4(),
 			title: TITLE_INPUT_REF.current ? TITLE_INPUT_REF.current.value : "",
@@ -95,15 +110,27 @@ const TaskForm = () => {
 			members: getCheckedValues(
 				document.querySelector("#members-list-container")
 			),
-			labels: LABEL_INPUT_REF.current
-				? LABEL_INPUT_REF.current.value.split(" ")
-				: "",
+			labels: finalLabelArray,
 			checklist: checkList,
 			columnNo: CURRENT_COLUMN_REF.current
 				? parseInt(CURRENT_COLUMN_REF.current.value)
 				: "",
 		};
-		console.log(task);
+		let updated = AddTaskToBoard(boards, boardNo, currentColumnNo, task);
+		setBoards(updated?.newBoards);
+		setToggleTaskForm(false);
+
+		if (boardNo !== null) {
+			const boardRef = database.ref(`boards`);
+			let boardId = boards[boardNo].id;
+			const specificBoardRef = boardRef.orderByChild("id").equalTo(boardId);
+			specificBoardRef.once("value").then((snapshot) => {
+				if (snapshot.exists()) {
+					let key = Object.keys(snapshot.val())[0];
+					boardRef.child(key).update(updated?.newBoard);
+				}
+			});
+		}
 	};
 
 	return (
@@ -114,6 +141,7 @@ const TaskForm = () => {
 					fill="none"
 					viewBox="0 0 24 24"
 					strokeWidth={2}
+					onClick={() => setToggleTaskForm(false)}
 					className="w-6 h-6 absolute top-[1rem] left-[1rem] cursor-pointer stroke-black hover:stroke-rose-500 transition-all duration-150 hover:rotate-90"
 				>
 					<path
