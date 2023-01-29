@@ -102,14 +102,18 @@ const App: React.FC = () => {
 						/>
 						{boards.length > 0 ? (
 							<Board board={boards[boardNo]} />
-						) : (
-							<div className="flex justify-center items-center w-full h-[90vh]">
+						) : user !== null ? (
+							<div className="flex justify-center items-center w-full h-[99vh]">
 								<div className="lds-ring">
 									<div></div>
 									<div></div>
 									<div></div>
 									<div></div>
 								</div>
+							</div>
+						) : (
+							<div className="flex justify-center items-center w-full h-[99vh]">
+								Create Boards
 							</div>
 						)}
 						{toggleBoardForm && (
