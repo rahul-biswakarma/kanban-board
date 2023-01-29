@@ -14,6 +14,7 @@ const BoardBody: React.FC<BoardBodyPropsType> = (props) => {
 
 	function getColumnIndex(columnId: string, board: any) {
 		let columns = board.columns;
+		console.log(columns, board);
 		for (let i = 0; i < columns.length; i++) {
 			if (columns[i].id === columnId) {
 				return i;
@@ -31,46 +32,48 @@ const BoardBody: React.FC<BoardBodyPropsType> = (props) => {
 					result.source.index === result.destination.index
 				)
 					return;
-				let sourceColumnIndex = getColumnIndex(
-					result.source.droppableId,
-					boards[currentColumnNo]
-				);
-				let destinationColumnIndex = getColumnIndex(
-					result.destination.droppableId,
-					boards[currentColumnNo]
-				);
-				let sourceColumn = boards[currentColumnNo].columns[sourceColumnIndex];
-				let destinationColumn =
-					boards[currentColumnNo].columns[destinationColumnIndex];
-				let sourceTasks = [...sourceColumn.tasks];
-				let destinationTasks: any = [];
-				if (destinationColumn.tasks)
-					destinationTasks = [...destinationColumn.tasks];
-				else destinationTasks = [];
+				if (boardNo !== null) {
+					let sourceColumnIndex = getColumnIndex(
+						result.source.droppableId,
+						boards[boardNo]
+					);
+					let destinationColumnIndex = getColumnIndex(
+						result.destination.droppableId,
+						boards[boardNo]
+					);
 
-				let [removed] = sourceTasks.splice(result.source.index, 1);
-				destinationTasks.splice(result.destination.index, 0, removed);
-				sourceColumn.tasks = sourceTasks;
-				destinationColumn.tasks = destinationTasks;
-				boards[currentColumnNo].columns[sourceColumnIndex] = sourceColumn;
-				boards[currentColumnNo].columns[destinationColumnIndex] =
-					destinationColumn;
-				setBoards([...boards]);
-				// Update Database
-				if (boards.length > 0 && boardNo !== null) {
-					var boardRef = database
-						.ref("boards")
-						.orderByChild("id")
-						.equalTo(boards[boardNo].id);
+					let sourceColumn = boards[boardNo].columns[sourceColumnIndex];
+					let destinationColumn =
+						boards[boardNo].columns[destinationColumnIndex];
+					let sourceTasks = [...sourceColumn.tasks];
+					let destinationTasks: any = [];
+					if (destinationColumn.tasks)
+						destinationTasks = [...destinationColumn.tasks];
+					else destinationTasks = [];
 
-					boardRef.once("value").then((snapshot) => {
-						if (snapshot.exists()) {
-							const boardKey = Object.keys(snapshot.val())[0];
-							console.log(boardKey);
-							let currentBoard = database.ref(`boards/${boardKey}`);
-							currentBoard.update(boards[boardNo]);
-						}
-					});
+					let [removed] = sourceTasks.splice(result.source.index, 1);
+					destinationTasks.splice(result.destination.index, 0, removed);
+					sourceColumn.tasks = sourceTasks;
+					destinationColumn.tasks = destinationTasks;
+					boards[boardNo].columns[sourceColumnIndex] = sourceColumn;
+					boards[boardNo].columns[destinationColumnIndex] = destinationColumn;
+					setBoards([...boards]);
+					// Update Database
+					if (boards.length > 0 && boardNo !== null) {
+						var boardRef = database
+							.ref("boards")
+							.orderByChild("id")
+							.equalTo(boards[boardNo].id);
+
+						boardRef.once("value").then((snapshot) => {
+							if (snapshot.exists()) {
+								const boardKey = Object.keys(snapshot.val())[0];
+								console.log(boardKey);
+								let currentBoard = database.ref(`boards/${boardKey}`);
+								currentBoard.update(boards[boardNo]);
+							}
+						});
+					}
 				}
 			}}
 		>

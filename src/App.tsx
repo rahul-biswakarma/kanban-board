@@ -37,7 +37,7 @@ const App: React.FC = () => {
 	useEffect(() => {
 		if (userKey !== "") {
 			let currentUserRef = database.ref(`users/${userKey}`);
-			currentUserRef.once("value").then(function (snapshot) {
+			currentUserRef.on("value", (snapshot) => {
 				if (snapshot.exists()) {
 					let userData = snapshot.val();
 					setBoardIds(userData.boards);
