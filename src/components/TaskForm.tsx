@@ -129,19 +129,31 @@ const TaskForm = () => {
 			tempTask.checklist = checkList;
 			setBoards(tempBoards);
 			setToggleTaskForm(false);
+			if (boardNo !== null) {
+				const boardRef = database.ref(`boards`);
+				let boardId = boards[boardNo].id;
+				const specificBoardRef = boardRef.orderByChild("id").equalTo(boardId);
+				specificBoardRef.once("value").then((snapshot) => {
+					if (snapshot.exists()) {
+						let key = Object.keys(snapshot.val())[0];
+						boardRef.child(key).update(updated?.newBoard);
+					}
+				});
+			}
 			return;
 		}
 		let tempLabelArray =
 			LABEL_INPUT_REF.current &&
 			LABEL_INPUT_REF.current.value.trim().split(" ");
 		let finalLabelArray: any = [];
-		tempLabelArray?.map((label: string) => {
-			let labelObj = {
-				id: uuidv4(),
-				title: label,
-			};
-			finalLabelArray.push(labelObj);
-		});
+		if (LABEL_INPUT_REF.current && LABEL_INPUT_REF.current.value !== "")
+			tempLabelArray?.map((label: string) => {
+				let labelObj = {
+					id: uuidv4(),
+					title: label,
+				};
+				finalLabelArray.push(labelObj);
+			});
 
 		let task = {
 			id: uuidv4(),

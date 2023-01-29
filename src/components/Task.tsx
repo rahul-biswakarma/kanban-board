@@ -48,17 +48,16 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 	}
 
 	function editTask(id: string, editTask: any, columnIndex: number) {
-		console.log(editTask);
 		let taskTitle = editTask.title;
 		let taskDescription = editTask.description;
 		let taskLabels = "";
-		if (editTask.labels !== undefined || editTask.labels !== null)
-			editTask.labels.length > 0 &&
-				editTask.labels.forEach((label: any) => {
-					taskLabels += label.title + " ";
-				});
+		if (editTask.labels !== undefined && editTask.labels.length > 0)
+			editTask.labels.forEach((label: any) => {
+				taskLabels += label.title + " ";
+			});
 		let taskChecklist: any[] = [];
-		editTask.checklist.length > 0 &&
+		editTask.checklist &&
+			editTask.checklist.length > 0 &&
 			editTask.checklist.forEach((todo: any) => {
 				taskChecklist.push(todo);
 			});
@@ -167,7 +166,7 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 								strokeWidth={1.5}
 								className=" h-6 stroke-text_2 hover:stroke-black"
 								onClick={() => {
-									// editTask(task.id, task, props.columnIndex);
+									editTask(task.id, task, props.columnIndex);
 								}}
 							>
 								<path
