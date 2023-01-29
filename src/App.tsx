@@ -19,6 +19,7 @@ const App: React.FC = () => {
 	const [user, setUser] = useState<any>(null);
 	const [boardNo, setBoardNo] = useState<number>(0);
 	const [boardIds, setBoardIds] = useState<any>([]);
+	const [loading, setLoading] = useState<boolean>(true);
 	const [boards, setBoards] = useState<BoardListsType>([]);
 	const [userKey, setUserKey] = useState<string | null>("");
 	const [memberImages, setMemberImages] = useState<any>([]);
@@ -28,12 +29,6 @@ const App: React.FC = () => {
 	const [toggleTaskForm, setToggleTaskForm] = useState<boolean>(false);
 	const [toggleBoardForm, setToggleBoardForm] = useState<boolean>(false);
 
-	// useEffect(() => {
-	// 	if (firebase.auth().currentUser) {
-	// 		setUserSignedIn(true);
-	// 	}
-	// }, []);
-
 	useEffect(() => {
 		if (userKey !== "") {
 			let currentUserRef = database.ref(`users/${userKey}`);
@@ -42,13 +37,14 @@ const App: React.FC = () => {
 					let userData = snapshot.val();
 					setBoardIds(userData.boards);
 					setNotifications(userData.notifications);
+					setLoading(false);
 				}
 			});
 		}
 	}, [userKey]);
 
 	useEffect(() => {
-		if (boardIds.length > 0) {
+		if (boardIds && boardIds.length > 0) {
 			const promises = boardIds.map((id: any) => {
 				const ref = database.ref(`boards/${id}`);
 				ref.on("value", (snapshot) => {
@@ -102,7 +98,7 @@ const App: React.FC = () => {
 						/>
 						{boards.length > 0 ? (
 							<Board board={boards[boardNo]} />
-						) : user !== null ? (
+						) : loading === true ? (
 							<div className="flex justify-center items-center w-full h-[99vh]">
 								<div className="lds-ring">
 									<div></div>
