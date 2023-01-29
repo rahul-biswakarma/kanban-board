@@ -28,17 +28,15 @@ const App: React.FC = () => {
 	const [toggleTaskForm, setToggleTaskForm] = useState<boolean>(false);
 	const [toggleBoardForm, setToggleBoardForm] = useState<boolean>(false);
 
-	useEffect(() => {
-		if (firebase.auth().currentUser) {
-			setUserSignedIn(true);
-		}
-	}, []);
+	// useEffect(() => {
+	// 	if (firebase.auth().currentUser) {
+	// 		setUserSignedIn(true);
+	// 	}
+	// }, []);
 
 	useEffect(() => {
 		if (userKey !== "") {
 			let currentUserRef = database.ref(`users/${userKey}`);
-
-			let boardsId: any = [];
 			currentUserRef.once("value").then(function (snapshot) {
 				if (snapshot.exists()) {
 					let userData = snapshot.val();
@@ -46,32 +44,16 @@ const App: React.FC = () => {
 					setNotifications(userData.notifications);
 				}
 			});
-			// .then(() => {
-			// 	if (boardsId) {
-			// 		const promises = boardsId.map((boardId: string) =>
-			// 			database.ref(`boards/${boardId}`).on("value", (snapshot) => {
-			// 				setBoards(snapshot.val());
-			// 			})
-			// 		);
-			// 		Promise.all(promises).then((snapshots) => {
-			// 			snapshots.forEach((snapshot) => {
-			// 				if (snapshot.exists()) {
-			// 					let board = snapshot.val();
-			// 					boards.push(board);
-			// 				}
-			// 			});
-			// 			setBoards(boards);
-			// 		});
-			// 	}
-			// });
 		}
 	}, [userKey]);
 
 	useEffect(() => {
 		if (boardIds.length > 0) {
-			const promises = boardIds.map((id: any) =>
-				database.ref(`boards/${id}`).on("value", (snapshot) => {
+			const promises = boardIds.map((id: any) => {
+				const ref = database.ref(`boards/${id}`);
+				ref.on("value", (snapshot) => {
 					if (snapshot.exists()) {
+						const { id } = snapshot.val();
 						setBoards((prevBoards) => {
 							const updatedBoard = snapshot.val();
 							const index = prevBoards.findIndex((board) => board.id === id);
@@ -82,19 +64,14 @@ const App: React.FC = () => {
 							];
 						});
 					}
-				})
-			);
+				});
+				return () => ref.off("value");
+			});
 			return () => {
 				promises.forEach((promise: any) => promise());
 			};
 		}
 	}, [boardIds]);
-
-	// useEffect(() => {
-	// 	console.log("hello");
-
-	// 	}
-	// }, [boards]);
 
 	return (
 		<>

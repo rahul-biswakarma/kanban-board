@@ -70,11 +70,14 @@ const KanbanColumn: React.FC<BoardColumnPropsType> = (props) => {
 					>
 						{column.tasks
 							? column.tasks.map((task, index) => (
-									<KanbanTask
-										key={task.id}
-										index={index}
-										task={task}
-									/>
+									<div key={task.id}>
+										<KanbanTask
+											key={`task-${task.id}`}
+											index={index}
+											task={task}
+										/>
+										{provided.placeholder}
+									</div>
 							  ))
 							: null}
 					</div>
