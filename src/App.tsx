@@ -18,6 +18,7 @@ import Signup from "./components/Signup";
 const App: React.FC = () => {
 	const [user, setUser] = useState<any>(null);
 	const [boardNo, setBoardNo] = useState<number>(0);
+	const [boardIds, setBoardIds] = useState<any>([]);
 	const [boards, setBoards] = useState<BoardListsType>([]);
 	const [userKey, setUserKey] = useState<string | null>("");
 	const [memberImages, setMemberImages] = useState<any>([]);
@@ -38,53 +39,62 @@ const App: React.FC = () => {
 			let currentUserRef = database.ref(`users/${userKey}`);
 
 			let boardsId: any = [];
-			currentUserRef
-				.once("value")
-				.then(function (snapshot) {
-					if (snapshot.exists()) {
-						let userData = snapshot.val();
-						boardsId = userData.boards;
-						setNotifications(userData.notifications);
-					}
-				})
-				.then(() => {
-					let boards: any = [];
-					if (boardsId) {
-						const promises = boardsId.map((boardId: string) =>
-							database.ref(`boards/${boardId}`).once("value")
-						);
-						Promise.all(promises).then((snapshots) => {
-							snapshots.forEach((snapshot) => {
-								if (snapshot.exists()) {
-									let board = snapshot.val();
-									boards.push(board);
-								}
-							});
-							setBoards(boards);
-						});
-					}
-				});
+			currentUserRef.once("value").then(function (snapshot) {
+				if (snapshot.exists()) {
+					let userData = snapshot.val();
+					setBoardIds(userData.boards);
+					setNotifications(userData.notifications);
+				}
+			});
+			// .then(() => {
+			// 	if (boardsId) {
+			// 		const promises = boardsId.map((boardId: string) =>
+			// 			database.ref(`boards/${boardId}`).on("value", (snapshot) => {
+			// 				setBoards(snapshot.val());
+			// 			})
+			// 		);
+			// 		Promise.all(promises).then((snapshots) => {
+			// 			snapshots.forEach((snapshot) => {
+			// 				if (snapshot.exists()) {
+			// 					let board = snapshot.val();
+			// 					boards.push(board);
+			// 				}
+			// 			});
+			// 			setBoards(boards);
+			// 		});
+			// 	}
+			// });
 		}
 	}, [userKey]);
 
 	useEffect(() => {
-		console.log("hello");
-		if (boards.length > 0) {
-			var boardRef = database
-				.ref("boards")
-				.orderByChild("id")
-				.equalTo(boards[boardNo].id);
-
-			boardRef.once("value").then((snapshot) => {
-				if (snapshot.exists()) {
-					const boardKey = Object.keys(snapshot.val())[0];
-					console.log(boardKey);
-					let currentBoard = database.ref(`boards/${boardKey}`);
-					currentBoard.update(boards[boardNo]);
-				}
-			});
+		if (boardIds.length > 0) {
+			const promises = boardIds.map((id: any) =>
+				database.ref(`boards/${id}`).on("value", (snapshot) => {
+					if (snapshot.exists()) {
+						setBoards((prevBoards) => {
+							const updatedBoard = snapshot.val();
+							const index = prevBoards.findIndex((board) => board.id === id);
+							return [
+								...prevBoards.slice(0, index),
+								updatedBoard,
+								...prevBoards.slice(index + 1),
+							];
+						});
+					}
+				})
+			);
+			return () => {
+				promises.forEach((promise: any) => promise());
+			};
 		}
-	}, [boards]);
+	}, [boardIds]);
+
+	// useEffect(() => {
+	// 	console.log("hello");
+
+	// 	}
+	// }, [boards]);
 
 	return (
 		<>

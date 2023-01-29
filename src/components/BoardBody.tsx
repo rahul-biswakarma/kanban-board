@@ -1,13 +1,16 @@
 import React, { useContext } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 
+import { database } from "../libs/firebase";
+
 import { UserContext } from "../libs/context";
 import BoardColumn from "./BoardColumn";
 
 import { BoardBodyPropsType } from "../libs/types/BoardBody";
 
 const BoardBody: React.FC<BoardBodyPropsType> = (props) => {
-	const { boards, setBoards, currentColumnNo } = useContext(UserContext);
+	const { boards, setBoards, boardNo, currentColumnNo } =
+		useContext(UserContext);
 
 	function getColumnIndex(columnId: string, board: any) {
 		let columns = board.columns;
@@ -53,6 +56,22 @@ const BoardBody: React.FC<BoardBodyPropsType> = (props) => {
 				boards[currentColumnNo].columns[destinationColumnIndex] =
 					destinationColumn;
 				setBoards([...boards]);
+				// Update Database
+				if (boards.length > 0 && boardNo !== null) {
+					var boardRef = database
+						.ref("boards")
+						.orderByChild("id")
+						.equalTo(boards[boardNo].id);
+
+					boardRef.once("value").then((snapshot) => {
+						if (snapshot.exists()) {
+							const boardKey = Object.keys(snapshot.val())[0];
+							console.log(boardKey);
+							let currentBoard = database.ref(`boards/${boardKey}`);
+							currentBoard.update(boards[boardNo]);
+						}
+					});
+				}
 			}}
 		>
 			<main className="relative bg-bg_2 w-full flex gap-[2rem] px-[2rem]">
