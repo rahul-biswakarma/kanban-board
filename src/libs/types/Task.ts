@@ -20,4 +20,5 @@ export type TaskType = {
 export type TaskPropsType = {
 	task: TaskType;
 	index: number;
+	columnIndex: number;
 };

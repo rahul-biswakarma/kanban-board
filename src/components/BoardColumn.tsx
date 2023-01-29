@@ -74,6 +74,7 @@ const KanbanColumn: React.FC<BoardColumnPropsType> = (props) => {
 										<KanbanTask
 											key={`task-${task.id}`}
 											index={index}
+											columnIndex={props.columnNo}
 											task={task}
 										/>
 										{provided.placeholder}
