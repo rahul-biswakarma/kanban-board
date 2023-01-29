@@ -12,7 +12,14 @@ import { TaskPropsType } from "../libs/types/Task";
 
 const KanbanTask: React.FC<TaskPropsType> = (props) => {
 	const { task, index } = props;
-	const { boards, boardNo, setBoards } = useContext(UserContext);
+	const {
+		boards,
+		boardNo,
+		setBoards,
+		setToggleTaskForm,
+		setTaskEditing,
+		setTaskEditValues,
+	} = useContext(UserContext);
 
 	function deleteTask(id: string, columnIndex: number) {
 		const newBoards = [...boards];
@@ -39,6 +46,34 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 			}
 		}
 	}
+
+	function editTask(id: string, editTask: any, columnIndex: number) {
+		console.log(editTask);
+		let taskTitle = editTask.title;
+		let taskDescription = editTask.description;
+		let taskLabels = "";
+		if (editTask.labels !== undefined || editTask.labels !== null)
+			editTask.labels.length > 0 &&
+				editTask.labels.forEach((label: any) => {
+					taskLabels += label.title + " ";
+				});
+		let taskChecklist: any[] = [];
+		editTask.checklist.length > 0 &&
+			editTask.checklist.forEach((todo: any) => {
+				taskChecklist.push(todo);
+			});
+		setTaskEditValues({
+			id: editTask.id,
+			columnIndex: columnIndex,
+			title: taskTitle,
+			description: taskDescription,
+			labels: taskLabels,
+			checklist: taskChecklist,
+		});
+		setTaskEditing(true);
+		setToggleTaskForm(true);
+	}
+
 	return (
 		<Draggable
 			draggableId={task.id}
@@ -131,7 +166,9 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 								viewBox="0 0 24 24"
 								strokeWidth={1.5}
 								className=" h-6 stroke-text_2 hover:stroke-black"
-								onClick={() => {}}
+								onClick={() => {
+									// editTask(task.id, task, props.columnIndex);
+								}}
 							>
 								<path
 									strokeLinecap="round"

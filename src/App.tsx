@@ -24,6 +24,8 @@ const App: React.FC = () => {
 	const [userKey, setUserKey] = useState<string | null>("");
 	const [memberImages, setMemberImages] = useState<any>([]);
 	const [notifications, setNotifications] = useState<any>([]);
+	const [taskEditValues, setTaskEditValues] = useState<any>({});
+	const [taskEditing, setTaskEditing] = useState<boolean>(false);
 	const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
 	const [currentColumnNo, setCurrentColumnNo] = useState<number>(0);
 	const [toggleTaskForm, setToggleTaskForm] = useState<boolean>(false);
@@ -82,6 +84,10 @@ const App: React.FC = () => {
 					notifications,
 					memberImages,
 					currentColumnNo,
+					taskEditing,
+					taskEditValues,
+					setTaskEditValues,
+					setTaskEditing,
 					toggleTaskForm,
 					setToggleTaskForm,
 					setCurrentColumnNo,

@@ -7,8 +7,16 @@ import { UserContext } from "../libs/context";
 import { AddTaskToBoard } from "../libs/AddTaskToBoard";
 
 const TaskForm = () => {
-	const { boards, setBoards, boardNo, currentColumnNo, setToggleTaskForm } =
-		useContext(UserContext);
+	const {
+		boards,
+		setBoards,
+		boardNo,
+		currentColumnNo,
+		setToggleTaskForm,
+		taskEditing,
+		taskEditValues,
+		setTaskEditing,
+	} = useContext(UserContext);
 
 	// State
 	const [checkList, setCheckList] = useState<any>([]);
@@ -26,6 +34,18 @@ const TaskForm = () => {
 	const TITLE_INPUT_REF = useRef<HTMLInputElement>(null);
 	const CURRENT_COLUMN_REF = useRef<HTMLSelectElement>(null);
 	const LABEL_INPUT_REF = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (taskEditing) {
+			TITLE_INPUT_REF.current &&
+				(TITLE_INPUT_REF.current.value = taskEditValues.title);
+			FORM_SECTION_1_REF.current &&
+				(FORM_SECTION_1_REF.current.value = taskEditValues.description);
+			LABEL_INPUT_REF.current &&
+				(LABEL_INPUT_REF.current.value = taskEditValues.labels);
+			setCheckList(taskEditValues.checklist);
+		}
+	});
 
 	useEffect(() => {
 		FORM_SECTION_0_REF.current &&
@@ -89,6 +109,28 @@ const TaskForm = () => {
 
 	const handleTaskSubmit = (e: any) => {
 		e.preventDefault();
+		if (taskEditing && boardNo !== null) {
+			let tempBoards = [...boards];
+			let tempBoard = tempBoards[boardNo];
+			let tempColumn = tempBoard.columns[taskEditValues.columnIndex];
+			let tempTasks = tempColumn.tasks;
+			let tempTask = tempTasks.find(
+				(task: any) => task.id === taskEditValues.id
+			);
+			tempTask.title = TITLE_INPUT_REF.current
+				? TITLE_INPUT_REF.current.value
+				: "";
+			tempTask.description = FORM_SECTION_1_REF.current
+				? FORM_SECTION_1_REF.current.value
+				: "";
+			tempTask.labels = LABEL_INPUT_REF.current
+				? LABEL_INPUT_REF.current.value
+				: "";
+			tempTask.checklist = checkList;
+			setBoards(tempBoards);
+			setToggleTaskForm(false);
+			return;
+		}
 		let tempLabelArray =
 			LABEL_INPUT_REF.current &&
 			LABEL_INPUT_REF.current.value.trim().split(" ");
@@ -133,6 +175,16 @@ const TaskForm = () => {
 		}
 	};
 
+	function closeTaskForm() {
+		TITLE_INPUT_REF.current && (TITLE_INPUT_REF.current.value = "");
+		FORM_SECTION_1_REF.current && (FORM_SECTION_1_REF.current.value = "");
+		LABEL_INPUT_REF.current && (LABEL_INPUT_REF.current.value = "");
+		setCheckList([]);
+
+		setTaskEditing(false);
+		setToggleTaskForm(false);
+	}
+
 	return (
 		<div className="fixed top-0 left-0 w-full h-full backdrop-blur-md bg-black/30 flex justify-center items-center z-50 ">
 			<div className="relative w-full max-w-[50rem]  p-[2rem] min-h-[60vh] bg-white rounded-lg shadow-lg flex flex-col  items-center">
@@ -141,7 +193,7 @@ const TaskForm = () => {
 					fill="none"
 					viewBox="0 0 24 24"
 					strokeWidth={2}
-					onClick={() => setToggleTaskForm(false)}
+					onClick={() => closeTaskForm()}
 					className="w-6 h-6 absolute top-[1rem] left-[1rem] cursor-pointer stroke-black hover:stroke-rose-500 transition-all duration-150 hover:rotate-90"
 				>
 					<path
@@ -163,13 +215,14 @@ const TaskForm = () => {
 								ref={TITLE_INPUT_REF}
 								type="text"
 								name="title"
-								id="title"
+								id="titleInput"
 								className="border-b-[2px] border-border_color p-[0.5rem]"
 								placeholder="Title"
 								required
 							/>
 						</div>
-						<div className="flex gap-[1rem] items-center">
+						{/* Select Column */}
+						{/* <div className="flex gap-[1rem] items-center">
 							<label
 								htmlFor="currentColumn"
 								className="font-bold"
@@ -195,7 +248,7 @@ const TaskForm = () => {
 										);
 									})}
 							</select>
-						</div>
+						</div> */}
 					</div>
 
 					<div className="flex justify-between gap-[0.5rem] border-[2px] border-border_color p-[0.5rem] mt-[1rem] rounded">
@@ -217,7 +270,7 @@ const TaskForm = () => {
 						<textarea
 							ref={FORM_SECTION_1_REF}
 							name="description"
-							id="description"
+							id="descriptionInput"
 							rows={3}
 							className="border-b-[2px] border-border_color p-[0.5rem] w-full h-max"
 							placeholder="Description"
@@ -262,6 +315,7 @@ const TaskForm = () => {
 									ref={LABEL_INPUT_REF}
 									type="text"
 									className="border-[2px] border-border_color p-[0.5rem] w-full"
+									id="labelInput"
 								/>
 							</div>
 						</div>

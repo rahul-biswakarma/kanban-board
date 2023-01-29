@@ -10,6 +10,10 @@ export const UserContext = createContext<{
 	memberImages: any;
 	currentColumnNo: number;
 	toggleTaskForm: boolean;
+	taskEditValues: any;
+	setTaskEditValues: React.Dispatch<React.SetStateAction<any>>;
+	taskEditing: boolean;
+	setTaskEditing: React.Dispatch<React.SetStateAction<boolean>>;
 	setToggleTaskForm: React.Dispatch<React.SetStateAction<boolean>>;
 	setCurrentColumnNo: React.Dispatch<React.SetStateAction<number>>;
 	setUser: React.Dispatch<React.SetStateAction<any>>;
@@ -24,6 +28,10 @@ export const UserContext = createContext<{
 	currentColumnNo: 0,
 	setCurrentColumnNo: () => {},
 	memberImages: [],
+	taskEditValues: null,
+	setTaskEditValues: () => {},
+	taskEditing: false,
+	setTaskEditing: () => {},
 	toggleTaskForm: false,
 	setToggleTaskForm: () => {},
 });

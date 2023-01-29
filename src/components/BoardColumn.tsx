@@ -40,7 +40,7 @@ const KanbanColumn: React.FC<BoardColumnPropsType> = (props) => {
 				<div
 					className="flex justify-center items-center w-full py-[0.5rem] bg-white rounded-md shadow-sm border-[1px] border-border_color shadow-slate-200 cursor-pointer"
 					onClick={() => {
-						setCurrentColumnNo(columnNo);
+						setCurrentColumnNo(props.columnNo);
 						setToggleTaskForm(true);
 					}}
 				>
