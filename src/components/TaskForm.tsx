@@ -114,6 +114,16 @@ const TaskForm = () => {
 			let tempBoard = tempBoards[boardNo];
 			let tempColumn = tempBoard.columns[taskEditValues.columnIndex];
 			let tempTasks = tempColumn.tasks;
+			let lablesArray = LABEL_INPUT_REF.current
+				? LABEL_INPUT_REF.current.value.trim().split(",")
+				: [];
+			let finalLabelsArray = [];
+			lablesArray.map((label: any) => {
+				finalLabelsArray.push({
+					id: uuidv4(),
+					title: label,
+				});
+			});
 			tempTasks.map((task: any) => {
 				if (task.id === taskEditValues.id) {
 					return Object.assign(task, {
@@ -121,9 +131,7 @@ const TaskForm = () => {
 						description: FORM_SECTION_1_REF.current
 							? FORM_SECTION_1_REF.current.value
 							: "",
-						labels: LABEL_INPUT_REF.current
-							? LABEL_INPUT_REF.current.value
-							: "",
+						labels: lablesArray,
 						checklist: checkList,
 					});
 				}

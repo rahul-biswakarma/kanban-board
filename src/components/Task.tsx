@@ -21,6 +21,8 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 		setTaskEditValues,
 	} = useContext(UserContext);
 
+	console.log(task.labels);
+
 	function deleteTask(id: string, columnIndex: number) {
 		const newBoards = [...boards];
 		if (boardNo !== null) {
