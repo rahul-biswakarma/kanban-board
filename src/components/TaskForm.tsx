@@ -114,21 +114,29 @@ const TaskForm = () => {
 			let tempBoard = tempBoards[boardNo];
 			let tempColumn = tempBoard.columns[taskEditValues.columnIndex];
 			let tempTasks = tempColumn.tasks;
-			let tempTask = tempTasks.find(
-				(task: any) => task.id === taskEditValues.id
-			);
-			tempTask.title = TITLE_INPUT_REF.current
-				? TITLE_INPUT_REF.current.value
-				: "";
-			tempTask.description = FORM_SECTION_1_REF.current
-				? FORM_SECTION_1_REF.current.value
-				: "";
-			tempTask.labels = LABEL_INPUT_REF.current
-				? LABEL_INPUT_REF.current.value
-				: "";
-			tempTask.checklist = checkList;
+			tempTasks.map((task: any) => {
+				if (task.id === taskEditValues.id) {
+					return Object.assign(task, {
+						title: TITLE_INPUT_REF.current ? TITLE_INPUT_REF.current.value : "",
+						description: FORM_SECTION_1_REF.current
+							? FORM_SECTION_1_REF.current.value
+							: "",
+						labels: LABEL_INPUT_REF.current
+							? LABEL_INPUT_REF.current.value
+							: "",
+						checklist: checkList,
+					});
+				}
+				return task;
+			});
+
+			tempColumn.tasks = tempTasks;
+			tempBoard.columns[taskEditValues.columnIndex] = tempColumn;
+			tempBoards[boardNo] = tempBoard;
+
 			setBoards(tempBoards);
 			setToggleTaskForm(false);
+
 			if (boardNo !== null) {
 				const boardRef = database.ref(`boards`);
 				let boardId = boards[boardNo].id;
@@ -136,7 +144,7 @@ const TaskForm = () => {
 				specificBoardRef.once("value").then((snapshot) => {
 					if (snapshot.exists()) {
 						let key = Object.keys(snapshot.val())[0];
-						boardRef.child(key).update(updated?.newBoard);
+						boardRef.child(key).update(tempBoards[boardNo]);
 					}
 				});
 			}
