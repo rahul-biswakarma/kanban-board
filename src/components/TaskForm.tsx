@@ -45,7 +45,6 @@ const TaskForm = () => {
 			LABEL_INPUT_REF.current &&
 				(LABEL_INPUT_REF.current.value = taskEditValues.labels);
 			setCheckList(taskEditValues.checklist);
-			console.log(checkList);
 		}
 	}, [taskEditValues]);
 
