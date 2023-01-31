@@ -15,6 +15,7 @@ const TaskForm = () => {
 		setToggleTaskForm,
 		taskEditing,
 		taskEditValues,
+		setTaskEditValues,
 		setTaskEditing,
 	} = useContext(UserContext);
 
@@ -44,8 +45,9 @@ const TaskForm = () => {
 			LABEL_INPUT_REF.current &&
 				(LABEL_INPUT_REF.current.value = taskEditValues.labels);
 			setCheckList(taskEditValues.checklist);
+			console.log(checkList);
 		}
-	});
+	}, [taskEditValues]);
 
 	useEffect(() => {
 		FORM_SECTION_0_REF.current &&
@@ -96,6 +98,15 @@ const TaskForm = () => {
 		setCheckList((prev: any) => {
 			return prev.filter((item: any, i: number) => i !== index);
 		});
+
+		let tempCheckList = [...checkList];
+		tempCheckList.splice(index, 1);
+
+		if (taskEditing) {
+			setTaskEditValues((prev: any) => {
+				return { ...prev, checklist: tempCheckList };
+			});
+		}
 	};
 
 	const getCheckedValues = (container: any) => {

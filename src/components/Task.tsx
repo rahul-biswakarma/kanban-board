@@ -60,6 +60,7 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 			editTask.checklist.forEach((todo: any) => {
 				taskChecklist.push(todo);
 			});
+		console.log(taskChecklist);
 		setTaskEditValues({
 			id: editTask.id,
 			columnIndex: columnIndex,
@@ -74,7 +75,6 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 
 	return (
 		<Draggable
-		
 			draggableId={task.id}
 			index={index}
 		>
