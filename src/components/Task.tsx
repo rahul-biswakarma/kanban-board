@@ -21,8 +21,6 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 		setTaskEditValues,
 	} = useContext(UserContext);
 
-	console.log(task.labels);
-
 	function deleteTask(id: string, columnIndex: number) {
 		const newBoards = [...boards];
 		if (boardNo !== null) {
@@ -40,7 +38,6 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 				boardRef.once("value").then((snapshot) => {
 					if (snapshot.exists()) {
 						const boardKey = Object.keys(snapshot.val())[0];
-						console.log(boardKey);
 						let currentBoard = database.ref(`boards/${boardKey}`);
 						currentBoard.update(boards[boardNo]);
 					}
@@ -55,7 +52,7 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 		let taskLabels = "";
 		if (editTask.labels !== undefined && editTask.labels.length > 0)
 			editTask.labels.forEach((label: any) => {
-				taskLabels += label.title + " ";
+				if (label.title !== undefined) taskLabels += label.title + " ";
 			});
 		let taskChecklist: any[] = [];
 		editTask.checklist &&
@@ -77,6 +74,7 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 
 	return (
 		<Draggable
+		
 			draggableId={task.id}
 			index={index}
 		>
@@ -93,10 +91,14 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 							task.labels.length > 0 &&
 							task.labels.map((label) => {
 								return (
-									<Label
-										key={label.id}
-										label={label}
-									/>
+									<>
+										{label.title != "" && label.title !== undefined && (
+											<Label
+												key={label.id}
+												label={label}
+											/>
+										)}
+									</>
 								);
 							})}
 					</div>
@@ -140,7 +142,6 @@ const KanbanTask: React.FC<TaskPropsType> = (props) => {
 									);
 								}
 							})} */}
-							Due Date
 						</div>
 						<div className="flex justify-end items-center gap-[10px]">
 							{/* Delete Icon */}
